@@ -47,7 +47,8 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 #if !(TARGET_IPHONE_SIMULATOR)
         self.previewLayer =
         [AVCaptureVideoPreviewLayer layerWithSession:self.session];
-        self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+//        self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspect;
         self.previewLayer.needsDisplayOnBoundsChange = YES;
 #endif
         self.paused = NO;
@@ -202,7 +203,13 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
     [device unlockForConfiguration];
 }
-
+- (void)lockISO
+{
+    AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
+    
+    [device setExposureModeCustomWithDuration: CMTimeMake(1, 4) ISO: 200 completionHandler: nil];
+    [device unlockForConfiguration];
+}
 - (void)updateAutoFocusPointOfInterest
 {
     AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
@@ -402,9 +409,9 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
             CGImageRef takenCGImage = takenImage.CGImage;
             CGSize previewSize;
             if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])) {
-                previewSize = CGSizeMake(self.previewLayer.frame.size.height, self.previewLayer.frame.size.width);
+                previewSize = CGSizeMake(self.previewLayer.frame.size.height, self.previewLayer.frame.size.width+125);
             } else {
-                previewSize = CGSizeMake(self.previewLayer.frame.size.width, self.previewLayer.frame.size.height);
+                previewSize = CGSizeMake(self.previewLayer.frame.size.width, self.previewLayer.frame.size.height+125);
             }
             CGRect cropRect = CGRectMake(0, 0, CGImageGetWidth(takenCGImage), CGImageGetHeight(takenCGImage));
             CGRect croppedSize = AVMakeRectWithAspectRatioInsideRect(previewSize, cropRect);
@@ -697,6 +704,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
             [self updateZoom];
             [self updateFocusMode];
             [self updateFocusDepth];
+            [self lockISO];
             [self updateAutoFocusPointOfInterest];
             [self updateWhiteBalance];
             [self.previewLayer.connection setVideoOrientation:orientation];

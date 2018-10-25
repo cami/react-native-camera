@@ -64,7 +64,7 @@
 {
     switch (whiteBalance) {
         case RNCameraWhiteBalanceSunny: default:
-            return 5200;
+            return 27000;
         case RNCameraWhiteBalanceCloudy:
             return 6000;
         case RNCameraWhiteBalanceShadow:
