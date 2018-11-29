@@ -49,6 +49,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         [AVCaptureVideoPreviewLayer layerWithSession:self.session];
 //        self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
         self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+        [self mirrorPreviewLayer];
         self.previewLayer.needsDisplayOnBoundsChange = YES;
 #endif
         self.paused = NO;
@@ -202,6 +203,10 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     }
 
     [device unlockForConfiguration];
+}
+- (void)mirrorPreviewLayer
+{
+    [[self previewLayer] setTransform:CATransform3DMakeScale(1, -1, 1)];
 }
 - (void)lockExposureMode
 {
