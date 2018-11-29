@@ -206,8 +206,22 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 - (void)lockISO
 {
     AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
-    
-    [device setExposureModeCustomWithDuration: CMTimeMake(1, 4) ISO: 200 completionHandler: nil];
+    NSError *error = nil;
+
+    if (![device lockForConfiguration:&error]) {
+        if (error) {
+            RCTLogError(@"%s: %@", __func__, error);
+        }
+        return;
+    }
+    int ISO = 140;
+    int value = 1;
+    int timescale = 3;
+    [device setExposureModeCustomWithDuration: CMTimeMake(value, timescale) ISO: ISO completionHandler: nil];
+
+    RCTLogInfo(@"%s: Custom ISO = %i", __func__, ISO);
+    RCTLogInfo(@"%s: Custom exposure duration = (%i, %i) : %fs", __func__, value, timescale, (float)value/timescale);
+
     [device unlockForConfiguration];
 }
 - (void)updateAutoFocusPointOfInterest
