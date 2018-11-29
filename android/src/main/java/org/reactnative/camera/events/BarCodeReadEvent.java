@@ -12,6 +12,7 @@ import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
 
 import java.util.Date;
+import java.util.Formatter;
 
 public class BarCodeReadEvent extends Event<BarCodeReadEvent> {
   private static final Pools.SynchronizedPool<BarCodeReadEvent> EVENTS_POOL =
@@ -68,6 +69,17 @@ public class BarCodeReadEvent extends Event<BarCodeReadEvent> {
 
     event.putInt("target", getViewTag());
     event.putString("data", mBarCode.getText());
+
+    byte[] rawBytes = mBarCode.getRawBytes();
+    if (rawBytes != null && rawBytes.length > 0) {
+      Formatter formatter = new Formatter();
+      for (byte b : rawBytes) {
+        formatter.format("%02x", b);
+      }
+      event.putString("rawData", formatter.toString());
+      formatter.close();
+    } 
+
     event.putString("type", mBarCode.getBarcodeFormat().toString());
     WritableArray resultPoints = Arguments.createArray();
     ResultPoint[] points = mBarCode.getResultPoints();

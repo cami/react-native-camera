@@ -272,6 +272,33 @@ The video stabilization mode used for a video recording. The possible values are
 
 You can read more about each stabilization type here: https://developer.apple.com/documentation/avfoundation/avcapturevideostabilizationmode
 
+### `iOS` `defaultVideoQuality`
+
+This option specifies the quality of the video to be taken. The possible values are:
+
+  - `RNCamera.Constants.VideoQuality.2160p`.
+    - `ios` Specifies capture settings suitable for 2160p (also called UHD or 4K) quality (3840x2160 pixel) video output.
+    - `android` Quality level corresponding to the 2160p (3840x2160) resolution. (Android Lollipop and above only!).
+  - `RNCamera.Constants.VideoQuality.1080p`.
+    - `ios` Specifies capture settings suitable for 1080p quality (1920x1080 pixel) video output.
+    - `android` Quality level corresponding to the 1080p (1920 x 1080) resolution.
+  - `RNCamera.Constants.VideoQuality.720p`.
+    - `ios` Specifies capture settings suitable for 720p quality (1280x720 pixel) video output.
+    - `android` Quality level corresponding to the 720p (1280 x 720) resolution.
+  - `RNCamera.Constants.VideoQuality.480p`.
+    - `ios` Specifies capture settings suitable for VGA quality (640x480 pixel) video output.
+    - `android` Quality level corresponding to the 480p (720 x 480) resolution.
+  - `RNCamera.Constants.VideoQuality.4:3`.
+    - `ios` Specifies capture settings suitable for VGA quality (640x480 pixel) video output. (Same as RNCamera.Constants.VideoQuality.480p).
+    - `android` Quality level corresponding to the 480p (720 x 480) resolution but with video frame width set to 640.
+  - `RNCamera.Constants.VideoQuality.288p`.
+    - `ios` Specifies capture settings suitable for CIF quality (352x288 pixel) video output.
+    - `android` Not supported.
+
+If nothing is passed the device's highest camera quality will be used as default.
+Note: This solve the flicker video recording issue for iOS
+
+
 ### Native Event callbacks props
 
 #### `onCameraReady`
@@ -292,7 +319,35 @@ Function to be called when native code emit onPictureTaken event, when camera ha
 
 Will call the specified method when a barcode is detected in the camera's view.
 
-Event contains `data` (the data in the barcode) and `type` (the type of the barcode detected).
+Event contains the following fields
+- `data` - a textual representation of the barcode, if available
+- `rawData` - The raw data encoded in the barcode, if available
+- `type` - the type of the barcode detected
+- `bounds` -
+  - on iOS:
+
+        bounds:{
+          size:{
+            width:string,
+            height:string
+          }
+          origin:{
+            x:string,
+            y:string
+          }
+        }
+  - onAndroid:
+
+        bounds:[{x:string,y:string}]
+  	- on Android it just returns resultPoints:
+        - for barcodes:
+
+              bounds[0].x : left side of barcode.
+              bounds[1].x : right side of barcode
+        - counting for QRcodes:
+
+              1 2
+              0
 
 The following barcode types can be recognised:
 
@@ -310,8 +365,6 @@ The following barcode types can be recognised:
 - `itf14` (when available)
 - `datamatrix` (when available)
 
-The barcode type is provided in the `data` object.
-
 
 #### `barCodeTypes`
 
@@ -321,6 +374,16 @@ Example: `<RNCamera barCodeTypes={[RNCamera.Constants.BarCodeType.qr]} />`
 #### `Android` `onGoogleVisionBarcodesDetected`
 
 Like `onBarCodeRead`, but we will use Google Play Service Vision to scan barcodes, which is pretty fast on Android. Note: If you already set `onBarCodeRead`, this will be invalid.
+
+#### `Android` `googleVisionBarcodeType`
+
+Like `barCodeTypes`, but applies to the Google Play Service Vision barcode detector.
+Example: `<RNCamera googleVisionBarcodeType={RNCamera.Constants.GoogleVisionBarcodeDetection.BarcodeType.DATA_MATRIX} />`
+
+#### `Android` `googleVisionBarcodeMode`
+
+Change the mode in order to scan "inverted" barcodes. You can either change it to `alternate`, which will inverted the image data every second screen and be able to read both normal and inverted barcodes, or `inverted`, which will only read inverted barcodes.  Default is `normal`, which only reads "normal" barcodes. Note: this property only applies to the Google Vision barcode detector.
+Example: `<RNCamera googleVisionBarcodeMode={RNCamera.Constants.GoogleVisionBarcodeDetection.BarcodeMode.ALTERNATE} />`
 
 ### Face Detection Related props
 
@@ -388,6 +451,8 @@ Supported options:
 
 - `doNotSave` (boolean true or false). Use this with `true` if you do not want the picture to be saved as a file to cache. If no value is specified `doNotSave:false` is used. If you only need the base64 for the image, you can use this with `base64:true` and avoid having to save the file.
 
+
+ - `pauseAfterCapture` (boolean true or false).  If true, pause the preview layer immediately after capturing the image.  You will need to call `cameraRef.resumePreview()` before using the camera again. If no value is specified `pauseAfterCapture:false` is used.
 
 The promise will be fulfilled with an object with some of the following properties:
 
