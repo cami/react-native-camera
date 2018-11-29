@@ -203,6 +203,24 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
     [device unlockForConfiguration];
 }
+- (void)lockExposureMode
+{
+    AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
+    NSError *error = nil;
+
+    if (![device lockForConfiguration:&error]) {
+        if (error) {
+            RCTLogError(@"%s: %@", __func__, error);
+        }
+        return;
+    }
+
+    if ([device isExposureModeSupported: AVCaptureExposureModeLocked]) {
+        [device setExposureMode: AVCaptureExposureModeLocked];
+    }
+
+    [device unlockForConfiguration];
+}
 - (void)lockISO
 {
     AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
@@ -714,6 +732,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
             [self.session addInput:captureDeviceInput];
 
             self.videoCaptureDeviceInput = captureDeviceInput;
+            [self lockExposureMode];
             [self updateFlashMode];
             [self updateZoom];
             [self updateFocusMode];
