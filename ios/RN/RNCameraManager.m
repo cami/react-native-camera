@@ -185,6 +185,17 @@ RCT_CUSTOM_VIEW_PROPERTY(customISO, NSNumber, RNCamera)
     [view lockISO];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(mirrorPreviewX, BOOL, RNCamera)
+{
+    [view setMirrorPreviewX:[RCTConvert BOOL:json]];
+    [view mirrorPreviewLayer];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(mirrorPreviewY, BOOL, RNCamera)
+{
+    [view setMirrorPreviewY:[RCTConvert BOOL:json]];
+    [view mirrorPreviewLayer];
+}
 
 RCT_CUSTOM_VIEW_PROPERTY(exposureValue, NSNumber, RNCamera)
 {

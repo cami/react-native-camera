@@ -204,9 +204,26 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
     [device unlockForConfiguration];
 }
+
 - (void)mirrorPreviewLayer
 {
-    [[self previewLayer] setTransform:CATransform3DMakeScale(1, -1, 1)];
+    AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
+    RCTLogInfo(@"%s: Mirroring = %d, %d", __func__, (1)&self.mirrorPreviewX, (1)&self.mirrorPreviewY);
+    if([self mirrorPreviewX] & [self mirrorPreviewY]){
+        [[self previewLayer] setTransform:CATransform3DMakeScale(-1, -1, 1)];
+    }else{
+        if([self mirrorPreviewX]){
+            [[self previewLayer] setTransform:CATransform3DMakeScale(-1, 1, 1)];
+        }else{
+            [[self previewLayer] setTransform:CATransform3DMakeScale(1, 1, 1)];
+        }
+        if([self mirrorPreviewY]){
+            [[self previewLayer] setTransform:CATransform3DMakeScale(1, -1, 1)];
+        }else{
+            [[self previewLayer] setTransform:CATransform3DMakeScale(1, 1, 1)];
+        }
+    }
+    [device unlockForConfiguration];
 }
 
 - (void)lockExposureMode

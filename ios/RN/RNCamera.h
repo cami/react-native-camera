@@ -35,6 +35,8 @@
 @property (assign, nonatomic) CGFloat zoom;
 @property (assign, nonatomic) NSInteger autoFocus;
 @property (assign, nonatomic) float customISO;
+@property (nonatomic, assign) BOOL mirrorPreviewX;
+@property (nonatomic, assign) BOOL mirrorPreviewY;
 @property (assign, nonatomic) NSInteger exposureValue;
 @property (assign, nonatomic) double exposureTimeScale;
 @property (copy, nonatomic) NSDictionary *autoFocusPointOfInterest;
@@ -49,6 +51,7 @@
 @property(assign, nonatomic, nullable) NSNumber *defaultVideoQuality;
 
 - (id)initWithBridge:(RCTBridge *)bridge;
+- (void)mirrorPreviewLayer;
 - (void)lockExposureMode;
 - (void)lockISO;
 - (void)updateType;
