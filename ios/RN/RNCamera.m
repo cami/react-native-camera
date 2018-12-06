@@ -1222,4 +1222,8 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
     self.videoDataOutput = nil;
 }
 
+- (bool)isRecording {
+    return self.movieFileOutput.isRecording;
+}
+
 @end
