@@ -208,6 +208,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 {
     [[self previewLayer] setTransform:CATransform3DMakeScale(1, -1, 1)];
 }
+
 - (void)lockExposureMode
 {
     AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
@@ -226,6 +227,7 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
 
     [device unlockForConfiguration];
 }
+
 - (void)lockISO
 {
     AVCaptureDevice *device = [self.videoCaptureDeviceInput device];
@@ -237,16 +239,15 @@ static NSDictionary *defaultFaceDetectorOptions = nil;
         }
         return;
     }
-    int ISO = 140;
-    int value = 1;
-    int timescale = 3;
-    [device setExposureModeCustomWithDuration: CMTimeMake(value, timescale) ISO: ISO completionHandler: nil];
+    [device setExposureModeCustomWithDuration: CMTimeMake(self.exposureValue, self.exposureTimeScale) ISO: self.customISO completionHandler: nil];
 
-    RCTLogInfo(@"%s: Custom ISO = %i", __func__, ISO);
-    RCTLogInfo(@"%s: Custom exposure duration = (%i, %i) : %fs", __func__, value, timescale, (float)value/timescale);
-
+    RCTLogInfo(@"%s: Custom ISO = %f", __func__, self.customISO);
+    RCTLogInfo(@"%s: Custom exposure duration = (%i, %li)", __func__, (int)self.exposureValue, (long)self.exposureTimeScale);
+    RCTLogInfo(@"%s: Current ISO = %f", __func__, device.ISO);
+    RCTLogInfo(@"%s: Current exposure duration = (%lli, %i)", __func__, device.exposureDuration.value, device.exposureDuration.timescale);
     [device unlockForConfiguration];
 }
+
 - (void)updateAutoFocusPointOfInterest
 {
     AVCaptureDevice *device = [self.videoCaptureDeviceInput device];

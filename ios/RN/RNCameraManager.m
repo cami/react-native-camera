@@ -179,6 +179,25 @@ RCT_CUSTOM_VIEW_PROPERTY(autoFocusPointOfInterest, NSDictionary, RNCamera)
     [view updateAutoFocusPointOfInterest];
 }
 
+RCT_CUSTOM_VIEW_PROPERTY(customISO, NSNumber, RNCamera)
+{
+    [view setCustomISO:[RCTConvert float:json]];
+    [view lockISO];
+}
+
+
+RCT_CUSTOM_VIEW_PROPERTY(exposureValue, NSNumber, RNCamera)
+{
+    [view setExposureValue:[RCTConvert float:json]];
+    [view lockISO];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(exposureTimeScale, NSNumber, RNCamera)
+{
+    [view setExposureTimeScale:[RCTConvert float:json]];
+    [view lockISO];
+}
+
 RCT_CUSTOM_VIEW_PROPERTY(focusDepth, NSNumber, RNCamera)
 {
     [view setFocusDepth:[RCTConvert float:json]];

@@ -34,6 +34,9 @@
 @property (assign, nonatomic) NSInteger flashMode;
 @property (assign, nonatomic) CGFloat zoom;
 @property (assign, nonatomic) NSInteger autoFocus;
+@property (assign, nonatomic) float customISO;
+@property (assign, nonatomic) NSInteger exposureValue;
+@property (assign, nonatomic) double exposureTimeScale;
 @property (copy, nonatomic) NSDictionary *autoFocusPointOfInterest;
 @property (assign, nonatomic) float focusDepth;
 @property (assign, nonatomic) NSInteger whiteBalance;
@@ -46,6 +49,8 @@
 @property(assign, nonatomic, nullable) NSNumber *defaultVideoQuality;
 
 - (id)initWithBridge:(RCTBridge *)bridge;
+- (void)lockExposureMode;
+- (void)lockISO;
 - (void)updateType;
 - (void)updateFlashMode;
 - (void)updateFocusMode;
