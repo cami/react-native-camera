@@ -23,7 +23,8 @@
     NSString *text = [dateFormatter stringFromDate:currentDate];
     NSDictionary *attributes = [NSDictionary dictionaryWithObjects: @[[UIFont systemFontOfSize:18.0], [UIColor orangeColor]]
                                                            forKeys: @[NSFontAttributeName, NSForegroundColorAttributeName]];
-    [text drawAtPoint:CGPointMake(size.width * 0.1, size.height * 0.9) withAttributes:attributes];
+    // comment out: remove printing dd.MM.YY on the bottom of the image. 
+    // [text drawAtPoint:CGPointMake(size.width * 0.1, size.height * 0.9) withAttributes:attributes];
     image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
